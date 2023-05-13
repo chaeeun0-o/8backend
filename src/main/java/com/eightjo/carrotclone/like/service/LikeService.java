@@ -42,7 +42,7 @@ public class LikeService {
         //좋아요한 사람
         if (boardLike != null) {
             board.getLikes().remove(boardLike);
-            ResponseEntity.ok(new DefaultRes<>(ResponseMessage.BOARD_LIKE_DELETE));
+            return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.BOARD_LIKE_DELETE));
         }
 
         //좋아요 안 한 사람
@@ -52,7 +52,7 @@ public class LikeService {
 
     @Transactional
     public ResponseEntity<DefaultDataRes<?>> getLikeBoards(Member member) {
-        List<Board> boardList = likeRepository.findAllByMemberId(member.getId()).stream().map(Like::getBoard).collect(Collectors.toList());
+        List<Board> boardList = likeRepository.findAllByMemberId(member.getId()).stream().map(Like::getBoard).toList();
         List<BoardResponseDto> boardDtoList = boardList.stream().map(BoardResponseDto::new).toList();
         if (boardList.isEmpty()){
             return ResponseEntity.status(StatusCode.NO_CONTENT).body(new DefaultDataRes<List<BoardResponseDto>>(ResponseMessage.BOARD_GET, boardDtoList));
