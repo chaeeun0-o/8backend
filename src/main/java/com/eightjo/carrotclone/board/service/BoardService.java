@@ -13,6 +13,7 @@ import com.eightjo.carrotclone.global.dto.http.ResponseMessage;
 import com.eightjo.carrotclone.global.dto.http.StatusCode;
 import com.eightjo.carrotclone.global.exception.CustomException;
 import com.eightjo.carrotclone.global.security.UserDetailsImpl;
+import com.eightjo.carrotclone.global.validator.BoardValidator;
 import com.eightjo.carrotclone.like.repository.LikeRepository;
 import com.eightjo.carrotclone.member.entity.Member;
 import com.eightjo.carrotclone.member.repository.MemberRepository;
@@ -35,6 +36,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final LikeRepository likeRepository;
     private final MemberRepository memberRepository;
+    private final BoardValidator boardValidator;
     private final S3Uploader s3Uploader;
 
     //게시글 입력
@@ -86,6 +88,7 @@ public class BoardService {
         throw new CustomException(ResponseMessage.BOARD_DELETE_FAIL, StatusCode.INTERNAL_SERVER_ERROR);
     }
 
+    @Transactional(readOnly = true)
     public PageDto getAllPostByMember(Pageable pageable) {
         Member member = getMember();
         Page<Board> posts = boardRepository.findAll(pageable);
@@ -103,7 +106,20 @@ public class BoardService {
         return new PageDto(postResponseDtoList, posts.getTotalPages());
     }
 
+    public BoardResponseDto getPostByMember(Long boardId) {
+        Member member = getMember();
+        Board board = boardValidator.validateExistPost(boardId);
+        BoardResponseDto responseDto = new BoardResponseDto(board);
 
+        likeRepository.findByMemberIdAndBoardId(member.getId(), board.getId()).ifPresent(like -> {
+            responseDto.setLikeStatus(true);
+        });
+
+        return responseDto;
+    }
+
+
+    @Transactional(readOnly = true)
     public Board findBoardOrElseThrow(Long boardId, String msg) {
         return boardRepository.findById(boardId).orElseThrow(
                 () -> new CustomException(msg, StatusCode.BAD_REQUEST)
