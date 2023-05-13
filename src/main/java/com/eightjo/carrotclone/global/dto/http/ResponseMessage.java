@@ -72,4 +72,8 @@ public class ResponseMessage {
     public static final String LIKE_BOARD_GET = "찜한 게시글 조회 성공";
 
     public static final String LIKE_BOARD_GET_FAIL = "찜한 게시글이 없습니다.";
+
+    public static final String KAKAO_GET_ADDRESS_SUCCESS = "Kakao 주소 가져오기 성공";
+
+    public static final String KAKAO_GET_ADDRESS_FAIL = "Kakao 주소 가져오기 실패";
 }

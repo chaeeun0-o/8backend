@@ -1,26 +1,21 @@
 package com.eightjo.carrotclone.map.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MapConfig {
 
-    @Value("${CHAT-GPT-KEY}")
-    private static String apiKey;
-
-    public static String MODEL = "gpt-3.5-turbo";
-
-    public static final String CHAT_MODEL = "gpt-3.5-turbo";
-    public static final String TEXT_MODEL = "text-davinci-003";
-
-    public static final String AUTHORIZATION = "Authorization";
-    public static final String BEARER = "Bearer ";
-    public static final Integer MAX_TOKEN = 300;
-    public static final Double TEMPERATURE = 0.0;
-    public static final Double TOP_P = 1.0;
+    @Value("${KAKAO-API-KEY}")
+    private String apiKey;
     public static final String MEDIA_TYPE = "application/json; charset=UTF-8";
-    public static final String CHAT_URL = "https://api.openai.com/v1/chat/completions";
-    public static final String TEXT_URL = "https://api.openai.com/v1/completions";
-    public static final String MODEL_INFO_URL = "https://api.openai.com/v1/models/";
+    public static final String MAP_URL_F = "https://dapi.kakao.com/v2/local/geo/coord2address.json?";
+    public static final String MAP_URL_L = "&input_coord=WGS84";
+
+    public static final String KEY_NAME = "Authorization";
+
+    public static final String KEY_PREFIX = "KakaoAK ";
+
 
     public String getApiKey() {
         return apiKey;
