@@ -48,4 +48,12 @@ public class MemberController {
         memberService.logout(userDetails.getMember(), request);
         return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.LOGOUT_SUCCESS));
     }
+
+    @GetMapping("/newAccess")
+    public void newAccessToken(
+            @CookieValue(value = "Refresh_Token", required = false) String refreshToken,
+            HttpServletRequest request,
+            HttpServletResponse response){
+
+    }
 }

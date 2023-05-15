@@ -1,6 +1,7 @@
 package com.eightjo.carrotclone.board.controller;
 
 import com.eightjo.carrotclone.board.dto.BoardRequestDto;
+import com.eightjo.carrotclone.board.dto.BoardResponseDto;
 import com.eightjo.carrotclone.board.dto.BoardUpdateRequestDto;
 import com.eightjo.carrotclone.board.service.BoardService;
 import com.eightjo.carrotclone.global.dto.PageDto;
@@ -31,12 +32,12 @@ public class BoardController {
         return boardService.createBoard(boardRequestDto, userDetails);
     }
 
-    @PutMapping(value = "/boards/{boardId}")
+    @PutMapping(value = "/board/{boardId}")
     public ResponseEntity<?> updateBoard(@PathVariable Long boardId, @ModelAttribute BoardUpdateRequestDto boardRequestDto, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return boardService.updateBoard(boardId, boardRequestDto, userDetails);
     }
 
-    @DeleteMapping("/boards/{boardId}")
+    @DeleteMapping("/board/{boardId}")
     public ResponseEntity<?> deleteBoard(@PathVariable Long boardId, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return boardService.deleteBoard(boardId, userDetails);
     }
@@ -46,4 +47,12 @@ public class BoardController {
         PageDto page = boardService.getAllPostByMember(pageable);
         return ResponseEntity.ok(new DefaultDataRes<>(ResponseMessage.BOARD_GET, page));
     }
+
+    @GetMapping("/board/{boardId}")
+    public ResponseEntity<?> getPost(@PathVariable Long boardId) {
+        BoardResponseDto boardResponseDto = boardService.getPostByMember(boardId);
+        return ResponseEntity.ok(new DefaultDataRes<>(ResponseMessage.BOARD_GET, boardResponseDto));
+    }
+
+
 }

@@ -35,9 +35,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String refresh_token = jwtUtil.resolveToken(request, JwtUtil.REFRESH_TOKEN);
 
         if (access_token != null) {//엑세스 토큰이 있으면
-            if (jwtUtil.validateToken(access_token, jwtUtil.getAccessKey())) {//엑세스 키를 확인한다.
-                setAuthentication(jwtUtil.getUserInfoFromToken(access_token, jwtUtil.getAccessKey())); //유저 정보 저장
-            } else if (refresh_token != null) { //엑세스키가 만료 -> 리프레쉬 키가 있나? 있다.
+            if (jwtUtil.validateToken(access_token, jwtUtil.getAccessKey())) {//엑세스 키 만료?
+                setAuthentication(jwtUtil.getUserInfoFromToken(access_token, jwtUtil.getAccessKey())); //엑세스 키 만료?no 유저 정보 저장
+            } else if (refresh_token != null) { //엑세스키가 만료?yes -> 리프레쉬 키가 있나? 있다.
                 boolean isRefreshToken = jwtUtil.refreshTokenValidation(refresh_token);
 
                 if (isRefreshToken) { //리프레쉬 토큰 유효? yes

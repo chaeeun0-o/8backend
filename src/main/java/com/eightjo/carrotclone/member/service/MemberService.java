@@ -6,12 +6,16 @@ import com.eightjo.carrotclone.global.entity.RefreshToken;
 import com.eightjo.carrotclone.global.exception.CustomException;
 import com.eightjo.carrotclone.global.jwt.JwtUtil;
 import com.eightjo.carrotclone.global.repository.RefreshTokenRepository;
+import com.eightjo.carrotclone.global.validator.TokenValidator;
+import com.eightjo.carrotclone.map.Address;
+import com.eightjo.carrotclone.map.MapRepository;
 import com.eightjo.carrotclone.member.dto.LoginRequestDto;
 import com.eightjo.carrotclone.member.dto.LoginResponseDto;
 import com.eightjo.carrotclone.member.dto.SingupRequestDto;
 import com.eightjo.carrotclone.member.dto.TokenDto;
 import com.eightjo.carrotclone.member.entity.Member;
 import com.eightjo.carrotclone.member.repository.MemberRepository;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +33,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final MapRepository mapRepository;
+    private final TokenValidator tokenValidator;
     private final JwtUtil jwtUtil;
 
     //회원가입
@@ -48,6 +54,11 @@ public class MemberService {
         if (foundMemberNickname.isPresent()) {
             throw new CustomException(ResponseMessage.ALREADY_ENROLLED_NICKNAME, StatusCode.Conflict);
         }
+
+        Address address = new Address(
+                signupRequestDto.getAddress().getRegion1depthName(),
+                signupRequestDto.getAddress().getRegion2depthName(),
+                signupRequestDto.getAddress().getRegion3depthName());
 
         Member member = new Member(userId, password, nickname);
         memberRepository.save(member);
@@ -97,5 +108,20 @@ public class MemberService {
     private void setHeader(HttpServletResponse response, TokenDto tokenDto) {
         response.addHeader(JwtUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
         response.addHeader(JwtUtil.REFRESH_TOKEN, tokenDto.getRefreshToken());
+    }
+
+    @Transactional
+    public void callNewAccessToken(String refreshToken, HttpServletRequest request, HttpServletResponse response) {
+        String token = jwtUtil.resolveToken(request, JwtUtil.ACCESS_TOKEN);
+        tokenValidator.tokenNullCheck(token);
+
+        boolean isRefreshToken = jwtUtil.refreshTokenValidation(refreshToken);
+        if (!isRefreshToken) {
+            throw new CustomException(ResponseMessage.EXPIRED_TOKEN, StatusCode.UNAUTHORIZED);
+        }
+
+        String userId = jwtUtil.getUserInfoFromToken(refreshToken, jwtUtil.getRefreshKey());
+        String newAccessToken = jwtUtil.createToken(userId, jwtUtil.getAccessKey(), JwtUtil.ACCESS_TOKEN);
+        jwtUtil.setHeaderAccessToken(response, newAccessToken);
     }
 }
