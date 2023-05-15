@@ -15,7 +15,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // endpoint 설정 : /ws/chat
         // 이를 통해서 ws://localhost:8080/ws-edit 으로 요청이 들어오면 websocket 통신을 진행.
         registry.addEndpoint("/ws-edit")
-                //.setAllowedOrigins("http://localhost:3000")
+                .setAllowedOrigins("http://localhost:3000")
                 .withSockJS();
     }
 
