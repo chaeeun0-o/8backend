@@ -3,7 +3,6 @@ package com.eightjo.carrotclone.board.service;
 import com.eightjo.carrotclone.board.Util.S3Uploader;
 import com.eightjo.carrotclone.board.dto.BoardRequestDto;
 import com.eightjo.carrotclone.board.dto.BoardResponseDto;
-import com.eightjo.carrotclone.board.dto.BoardUpdateRequestDto;
 import com.eightjo.carrotclone.board.entity.Board;
 import com.eightjo.carrotclone.board.repository.BoardRepository;
 import com.eightjo.carrotclone.global.dto.PageDto;
@@ -21,13 +20,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Arrays.stream;
 
 @Service
 @RequiredArgsConstructor
@@ -42,13 +42,14 @@ public class BoardService {
     //게시글 입력
     @Transactional
     public ResponseEntity<?> createBoard(BoardRequestDto boardRequestDto, UserDetailsImpl userDetailsImp) {
-        if (boardRequestDto.getTitle() == null || boardRequestDto.getImage() == null || boardRequestDto.getPrice() == null || boardRequestDto.getAddress() == null) {
+        if (boardRequestDto.getTitle() == null || boardRequestDto.getImage() == null || boardRequestDto.getPrice() == null) {
             throw new CustomException(ResponseMessage.WRONG_FORMAT, StatusCode.BAD_REQUEST);
         }
         try {
             String imgPath = s3Uploader.upload(boardRequestDto.getImage());
             Board board = new Board(boardRequestDto, imgPath);
             board.setMember(userDetailsImp.getMember());
+
             boardRepository.save(board);
             BoardResponseDto boardResponseDto = new BoardResponseDto(board);
 
@@ -59,7 +60,7 @@ public class BoardService {
     }
     //게시글 수정
     @Transactional
-    public ResponseEntity<?> updateBoard(Long boardId, BoardUpdateRequestDto boardRequestDto, UserDetailsImpl userDetails) {
+    public ResponseEntity<?> updateBoard(Long boardId, BoardRequestDto boardRequestDto, UserDetailsImpl userDetails) {
         Board board = findBoardOrElseThrow(boardId, ResponseMessage.BOARD_UPDATE_FAIL);
 
         if (!board.getMember().getUserId().equals(userDetails.getMember().getUserId())) {
@@ -89,9 +90,9 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public PageDto getAllPostByMember(Pageable pageable) {
-        Member member = getMember();
-        Page<Board> posts = boardRepository.findAll(pageable);
+    public PageDto getAllPost(Pageable pageable, UserDetailsImpl userDetails) {
+        Member member = getMember(userDetails.getMember().getUserId());
+        Page<Board> posts = boardRepository.findAllByAddressId(pageable, member.getAddress().getId());
         List<Board> responseList = posts.getContent();
         List<BoardResponseDto> postResponseDtoList = new ArrayList<>();
 
@@ -106,8 +107,9 @@ public class BoardService {
         return new PageDto(postResponseDtoList, posts.getTotalPages());
     }
 
-    public BoardResponseDto getPostByMember(Long boardId) {
-        Member member = getMember();
+    @Transactional
+    public BoardResponseDto getPost(Long boardId, UserDetailsImpl userDetails) {
+        Member member = getMember(userDetails.getMember().getUserId());
         Board board = boardValidator.validateExistPost(boardId);
         BoardResponseDto responseDto = new BoardResponseDto(board);
 
@@ -118,6 +120,25 @@ public class BoardService {
         return responseDto;
     }
 
+    @Transactional(readOnly = true)
+    public List<BoardResponseDto> getMyPost(UserDetailsImpl userDetails) {
+        List<BoardResponseDto> boardList = boardRepository.findAllByMemberId((userDetails.getMember().getId())).stream().map(BoardResponseDto::new).toList();
+        if (boardList.size() == 0) {
+            return null;
+        }
+        return boardList;
+    }
+
+    @Transactional
+    public void changePost(Long boardId, UserDetailsImpl userDetails) {
+        Board board = findBoardOrElseThrow(boardId, ResponseMessage.BOARD_UPDATE_FAIL);
+
+        if (!board.getMember().getUserId().equals(userDetails.getMember().getUserId())) {
+            throw new CustomException(ResponseMessage.BOARD_UPDATE_FAIL, StatusCode.BAD_REQUEST);
+        }
+
+        board.setStatus(true);
+    }
 
     @Transactional(readOnly = true)
     public Board findBoardOrElseThrow(Long boardId, String msg) {
@@ -126,8 +147,8 @@ public class BoardService {
         );
     }
 
-    private Member getMember() {
-        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+    private Member getMember(String userId) {
         return memberRepository.findByUserId(userId).orElseThrow(
                 () -> new CustomException(ResponseMessage.NOT_FOUND_USER, StatusCode.BAD_REQUEST)
         );
