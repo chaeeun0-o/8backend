@@ -15,6 +15,8 @@ public class BoardResponseDto {
 
     private String address;
 
+    private Boolean status;
+
     private boolean likeStatus;
 
     private int likeCount;
@@ -25,7 +27,10 @@ public class BoardResponseDto {
         this.title = board.getTitle();
         this.image = board.getImage();
         this.content = board.getContent();
-        this.address= board.getAddress();
+        this.address= board.getMember().getAddress().getRegion1depthName() + " " +
+                board.getMember().getAddress().getRegion2depthName() + " " +
+                board.getMember().getAddress().getRegion3depthName();
+        this.status = board.isStatus();
         this.likeStatus = false;
         this.likeCount = board.getLikes().size();
     }

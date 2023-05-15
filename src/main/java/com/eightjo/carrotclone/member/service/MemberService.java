@@ -7,15 +7,18 @@ import com.eightjo.carrotclone.global.exception.CustomException;
 import com.eightjo.carrotclone.global.jwt.JwtUtil;
 import com.eightjo.carrotclone.global.repository.RefreshTokenRepository;
 import com.eightjo.carrotclone.global.validator.TokenValidator;
-//import com.eightjo.carrotclone.map.Address;
-//import com.eightjo.carrotclone.map.MapRepository;
+import com.eightjo.carrotclone.map.Address;
+import com.eightjo.carrotclone.map.Dto.KakaoMapRequestDto;
+import com.eightjo.carrotclone.map.Dto.MapRequestDto;
+import com.eightjo.carrotclone.map.MapRepository;
+import com.eightjo.carrotclone.map.MapService;
 import com.eightjo.carrotclone.member.dto.LoginRequestDto;
 import com.eightjo.carrotclone.member.dto.LoginResponseDto;
 import com.eightjo.carrotclone.member.dto.SingupRequestDto;
 import com.eightjo.carrotclone.member.dto.TokenDto;
 import com.eightjo.carrotclone.member.entity.Member;
 import com.eightjo.carrotclone.member.repository.MemberRepository;
-
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +36,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenRepository refreshTokenRepository;
-//    private final MapRepository mapRepository;
+    private final MapService mapService;
+    private final MapRepository mapRepository;
     private final TokenValidator tokenValidator;
     private final JwtUtil jwtUtil;
 
@@ -55,13 +59,33 @@ public class MemberService {
             throw new CustomException(ResponseMessage.ALREADY_ENROLLED_NICKNAME, StatusCode.Conflict);
         }
 
-//        Address address = new Address(
-//                signupRequestDto.getAddress().getRegion1depthName(),
-//                signupRequestDto.getAddress().getRegion2depthName(),
-//                signupRequestDto.getAddress().getRegion3depthName());
+        Optional<Address> optionalAddress = mapRepository.findByRegion1depthNameAndRegion2depthNameAndRegion3depthName(
+                signupRequestDto.getAddress().getRegion1depthName(),
+                signupRequestDto.getAddress().getRegion2depthName(),
+                signupRequestDto.getAddress().getRegion3depthName());
 
-        Member member = new Member(userId, password, nickname);
-        memberRepository.save(member);
+        if (optionalAddress.isEmpty()){
+            Address address = new Address(
+                    signupRequestDto.getAddress().getRegion1depthName(),
+                    signupRequestDto.getAddress().getRegion2depthName(),
+                    signupRequestDto.getAddress().getRegion3depthName());
+            KakaoMapRequestDto kakaoMapRequestDto = mapService.validAddressXY(new MapRequestDto(address));
+            address.setX(kakaoMapRequestDto.getX());
+            address.setY(kakaoMapRequestDto.getY());
+
+            Member member = new Member(userId, password, nickname);
+            address = mapRepository.save(address);
+            member.setAddress(address);
+            memberRepository.save(member);
+        }
+        else {
+            Member member = new Member(userId, password, nickname);
+            member.setAddress(optionalAddress.get());
+
+            memberRepository.save(member);
+        }
+
+
     }
 
     //로그인
@@ -102,6 +126,15 @@ public class MemberService {
             throw new CustomException(ResponseMessage.LOGOUT_FAIL, StatusCode.BAD_REQUEST);
         }
         refreshTokenRepository.delete(refreshToken.get());
+    }
+
+
+    public void getAddress(Member member) {
+        memberRepository.findByUserId(member.getUserId()).orElseThrow(
+                () -> new CustomException(ResponseMessage.NOT_FOUND_USER, StatusCode.BAD_REQUEST)
+        );
+
+
     }
 
     // 헤더 셋팅

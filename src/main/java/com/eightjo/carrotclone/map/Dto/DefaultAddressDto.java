@@ -1,24 +1,21 @@
 package com.eightjo.carrotclone.map.Dto;
 
 import com.eightjo.carrotclone.map.Address;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
-
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-public class MapRequestDto {
-    @NotBlank
-    @JsonProperty("region_1depth_name")
+@Setter
+@NoArgsConstructor
+public class DefaultAddressDto {
     private String region1depthName;
-    @NotBlank
-    @JsonProperty("region_2depth_name")
     private String region2depthName;
-    @NotBlank
-    @JsonProperty("region_3depth_name")
     private String region3depthName;
 
-    public MapRequestDto(Address address) {
+    @Builder
+    public DefaultAddressDto(Address address) {
         this.region1depthName = address.getRegion1depthName();
         this.region2depthName = address.getRegion2depthName();
         this.region3depthName = address.getRegion3depthName();

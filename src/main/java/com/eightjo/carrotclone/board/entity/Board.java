@@ -2,19 +2,20 @@ package com.eightjo.carrotclone.board.entity;
 
 
 import com.eightjo.carrotclone.board.dto.BoardRequestDto;
-import com.eightjo.carrotclone.board.dto.BoardUpdateRequestDto;
 import com.eightjo.carrotclone.global.entity.TimeStamped;
 import com.eightjo.carrotclone.like.entity.Like;
 import com.eightjo.carrotclone.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 public class Board extends TimeStamped {
 
@@ -37,11 +38,12 @@ public class Board extends TimeStamped {
     @Column(nullable = false)
     private boolean status;
 
-    @Column(nullable = false)
-    private String address;
-
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
+
+    @Column(name = "address_id")
+    private Long addressId;
 
     @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
@@ -51,17 +53,16 @@ public class Board extends TimeStamped {
         this.image = imgPath;
         this.content = boardRequestDto.getContent();
         this.price = boardRequestDto.getPrice();
-        this.address = boardRequestDto.getAddress();
         this.likes = new ArrayList<>();
     }
     public void setMember(Member member) {
         this.member = member;
+        this.addressId = member.getAddress().getId();
     }
 
-    public void update(BoardUpdateRequestDto boardRequestDto) {
+    public void update(BoardRequestDto boardRequestDto) {
         this.title = boardRequestDto.getTitle();
         this.content = boardRequestDto.getContent();
         this.price = boardRequestDto.getPrice();
-        this.address = boardRequestDto.getAddress();
     }
 }
