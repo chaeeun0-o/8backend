@@ -36,7 +36,6 @@ public class MemberController {
         return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.CREATED_USER));
     }
 
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         memberService.login(loginRequestDto, response);

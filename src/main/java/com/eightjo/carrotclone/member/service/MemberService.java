@@ -7,8 +7,8 @@ import com.eightjo.carrotclone.global.exception.CustomException;
 import com.eightjo.carrotclone.global.jwt.JwtUtil;
 import com.eightjo.carrotclone.global.repository.RefreshTokenRepository;
 import com.eightjo.carrotclone.global.validator.TokenValidator;
-import com.eightjo.carrotclone.map.Address;
-import com.eightjo.carrotclone.map.MapRepository;
+//import com.eightjo.carrotclone.map.Address;
+//import com.eightjo.carrotclone.map.MapRepository;
 import com.eightjo.carrotclone.member.dto.LoginRequestDto;
 import com.eightjo.carrotclone.member.dto.LoginResponseDto;
 import com.eightjo.carrotclone.member.dto.SingupRequestDto;
@@ -33,7 +33,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final MapRepository mapRepository;
+//    private final MapRepository mapRepository;
     private final TokenValidator tokenValidator;
     private final JwtUtil jwtUtil;
 
@@ -55,10 +55,10 @@ public class MemberService {
             throw new CustomException(ResponseMessage.ALREADY_ENROLLED_NICKNAME, StatusCode.Conflict);
         }
 
-        Address address = new Address(
-                signupRequestDto.getAddress().getRegion1depthName(),
-                signupRequestDto.getAddress().getRegion2depthName(),
-                signupRequestDto.getAddress().getRegion3depthName());
+//        Address address = new Address(
+//                signupRequestDto.getAddress().getRegion1depthName(),
+//                signupRequestDto.getAddress().getRegion2depthName(),
+//                signupRequestDto.getAddress().getRegion3depthName());
 
         Member member = new Member(userId, password, nickname);
         memberRepository.save(member);
