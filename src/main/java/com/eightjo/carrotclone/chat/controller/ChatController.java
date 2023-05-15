@@ -2,7 +2,6 @@ package com.eightjo.carrotclone.chat.controller;
 
 import com.eightjo.carrotclone.chat.ChatService;
 import com.eightjo.carrotclone.chat.dto.ChatDto;
-import com.eightjo.carrotclone.global.dto.http.DefaultDataRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -11,8 +10,6 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
@@ -22,12 +19,6 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 public class ChatController {
     private final ChatService chatService;
     private final SimpMessagingTemplate msgOperation;
-//
-//    @PostMapping("/chat")
-//    public DefaultDataRes createChatRoom(@RequestBody String receiver, String sender) {
-//        return chatService.createChatRoom(receiver, sender);
-//        // createChatRoom의 결과인 roomId와 type : ENTER을 저장한 chatDto에 넣어줘야함
-//    }
 
     @MessageMapping("/chat/enter")
     @SendTo("/sub/chat/room")

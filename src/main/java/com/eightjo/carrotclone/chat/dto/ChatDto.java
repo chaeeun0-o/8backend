@@ -21,5 +21,5 @@ public class ChatDto {
     private String sender;
     private String roomId;
     private String message;
-   // private String time;
+    private String time;
 }
