@@ -12,8 +12,8 @@ public class MapConfig {
     public static final String MAP_URL_F = "https://dapi.kakao.com/v2/local/geo/coord2address.json?";
     public static final String MAP_URL_L = "&input_coord=WGS84";
 
+    public static final String ADDRESS_URL = "https://dapi.kakao.com/v2/local/search/address.json?analyze_type=exact&page=1&size=10&query=";
     public static final String KEY_NAME = "Authorization";
-
     public static final String KEY_PREFIX = "KakaoAK ";
 
 
