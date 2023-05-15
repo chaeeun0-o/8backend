@@ -1,62 +1,52 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.6'
-    id 'io.spring.dependency-management' version '1.1.0'
+    id 'io.spring.dependency-management' version '1.0.2.RELEASE'
 }
-
 group = 'com.eightjo'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
 }
-
 repositories {
     mavenCentral()
 }
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'com.h2database:h2'
+//    runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-
     implementation group: 'org.json', name: 'json', version: '20220924'
+    //JWT
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
-
-    //swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-    // spring-doc for local test(swagger-ui)
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version:'1.6.9'
-
-    //S3
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-    // Use ConfigurationProperties
-    annotationProcessor ('org.springframework.boot:spring-boot-configuration-processor')
-
-    // Spring Security OAuth2
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
     // JSON Binding API
     implementation 'javax.json:javax.json-api:1.1.4'
     // Jackson JSON Processor
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.4'
-
+    //swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
     // spring-doc for local test(swagger-ui)
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version:'1.6.9'
-
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.9'
+    //S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    // Use ConfigurationProperties
+    annotationProcessor('org.springframework.boot:spring-boot-configuration-processor')
+    // Spring Security OAuth2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    // spring-doc for local test(swagger-ui)
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.9'
 }
-
 tasks.named('test') {
     useJUnitPlatform()
 }
