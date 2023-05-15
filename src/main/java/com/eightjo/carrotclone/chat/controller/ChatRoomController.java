@@ -12,6 +12,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/chat")
 public class ChatRoomController {
+
 //    private final ChatService chatService;
 //
 //    // 채팅 리스트 화면
