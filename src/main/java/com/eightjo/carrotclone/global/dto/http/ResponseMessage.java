@@ -3,6 +3,8 @@ package com.eightjo.carrotclone.global.dto.http;
 
 public class ResponseMessage {
     public static final String EXPIRED_TOKEN = "만료된 토큰입니다.";
+
+    public static final String NOT_FOUND_TOKEN = "토큰을 찾을 수 없습니다.";
     public static final String LOGIN_SUCCESS = "로그인 성공";
     public static final String LOGIN_FAIL_ID = "로그인 실패 : 아이디를 확인해주세요.";
     public static final String LOGIN_FAIL_PASSWORD = "로그인 실패 : 비밀번호를 확인해주세요.";
