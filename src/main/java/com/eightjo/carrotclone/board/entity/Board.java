@@ -4,6 +4,7 @@ package com.eightjo.carrotclone.board.entity;
 import com.eightjo.carrotclone.board.dto.BoardRequestDto;
 import com.eightjo.carrotclone.global.entity.TimeStamped;
 import com.eightjo.carrotclone.like.entity.Like;
+import com.eightjo.carrotclone.map.Address;
 import com.eightjo.carrotclone.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -42,8 +43,9 @@ public class Board extends TimeStamped {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @Column(name = "address_id")
-    private Long addressId;
+    private Address address;
 
     @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
@@ -57,7 +59,7 @@ public class Board extends TimeStamped {
     }
     public void setMember(Member member) {
         this.member = member;
-        this.addressId = member.getAddress().getId();
+        this.address = member.getAddress();
     }
 
     public void update(BoardRequestDto boardRequestDto) {
