@@ -13,12 +13,14 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MapService {
 
     private final MapConfig mapConfig;
+    private final MapRepository mapRepository;
     private static RestTemplate restTemplate = new RestTemplate();
 
     public MapResponseDto getAddress(KakaoMapRequestDto kakaoMapRequestDto) {
@@ -46,36 +48,43 @@ public class MapService {
                 documents.getAddress().getRegion3depthName());
     }
 
-//    public MapResponseDto getAddressList(Address address,int size) {
-//        List<Address> addressList = new ArrayList<>();
+//    public List<Long> getAddressList(Address address,int size) {
+//        if ( size < 0 || 3 < size ){
+//            throw new CustomException(ResponseMessage.WRONG_FORMAT, HttpStatus.BAD_REQUEST.value());
+//        }
+//
+//        List<Long> addressIdList = new ArrayList<>();
 //
 //        HttpHeaders headers = new HttpHeaders();
 //        headers.add(MapConfig.KEY_NAME, MapConfig.KEY_PREFIX + mapConfig.getApiKey());
 //
-//        ResponseEntity<KakaoRegionResponseDto> responseEntity = restTemplate.exchange(
-//                MapConfig.REGION_URL + "x=" + address.getX() + "&y=" + address.getY(),
-//                HttpMethod.GET,
-//                new HttpEntity<>(null, headers),
-//                KakaoRegionResponseDto.class);
+//        ResponseEntity<KakaoRegionResponseDto> responseEntity = null;
 //
-//        KakaoRegionResponseDto regionResponseDto = responseEntity.getBody();
-//        if(regionResponseDto == null){
-//            throw new CustomException(ResponseMessage.KAKAO_GET_ADDRESS_FAIL,StatusCode.METHOD_NOT_ALLOWED);
+//        for (int i = 0; i < size; i++) {
+//            responseEntity = restTemplate.exchange(
+//                    MapConfig.REGION_URL + "x=" + address.getX() + "&y=" + address.getY(),
+//                    HttpMethod.GET,
+//                    new HttpEntity<>(null, headers),
+//                    KakaoRegionResponseDto.class);
+//
+//            KakaoRegionResponseDto regionResponseDto = responseEntity.getBody();
+//            KakaoRegionResponseDto.RegionDocuments documents = regionResponseDto.getDocuments().get(1);
+//
+//            Optional<Address> findAddress =  mapRepository.findByXY(documents.getX(), documents.getY());
+//
+//            if (findAddress.isPresent()){
+//
+//            }
+//
+//            Address newAddress = new Address(
+//                    documents.getRegion1depthName(),
+//                    documents.getRegion2depthName(),
+//                    documents.getRegion3depthName(),
+//                    documents.getX(),
+//                    documents.getY());
+//
 //        }
-//        if(regionResponseDto.getMeta().getTotalCount() == 0){
-//            throw new CustomException(ResponseMessage.KAKAO_GET_ADDRESS_FAIL,StatusCode.METHOD_NOT_ALLOWED);
-//        }
-//
-//        KakaoRegionResponseDto.RegionDocuments documents = regionResponseDto.getDocuments().get(1);
-//
-//        addressList.add( new Address(
-//                documents.getRegion1depthName(),
-//                documents.getRegion2depthName(),
-//                documents.getRegion3depthName(),
-//                documents.getX(),
-//                documents.getY()));
-//
-//        return
+//        return addressList;
 //    }
 
     public KakaoMapRequestDto validAddressXY(MapRequestDto mapRequestDto) {
