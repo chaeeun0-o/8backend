@@ -12,8 +12,11 @@ import java.util.UUID;
 
 @Getter
 @Setter
+@Entity
 @NoArgsConstructor
 public class ChatRoom {
+    @Id
+    @Column(nullable = false, unique = true)
     private String roomId;
     private String roomName;
 
