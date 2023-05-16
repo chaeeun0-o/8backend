@@ -9,6 +9,8 @@ public class BoardResponseDto {
 
     private String title;
 
+    private String nickName;
+
     private String image;
 
     private String content;
@@ -36,6 +38,7 @@ public class BoardResponseDto {
         this.likeStatus = false;
         this.likeCount = board.getLikes().size();
         this.price = board.getPrice().toString();
+        this.nickName = board.getMember().getNickname();
     }
 
     public void setLikeStatus(boolean status) {
