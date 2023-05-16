@@ -4,11 +4,13 @@ import com.eightjo.carrotclone.board.dto.BoardRequestDto;
 import com.eightjo.carrotclone.board.dto.BoardResponseDto;
 import com.eightjo.carrotclone.board.dto.BoardUpdateRequestDto;
 import com.eightjo.carrotclone.board.service.BoardService;
+import com.eightjo.carrotclone.global.dto.PageDto;
 import com.eightjo.carrotclone.global.dto.http.DefaultDataRes;
 import com.eightjo.carrotclone.global.dto.http.ResponseMessage;
 import com.eightjo.carrotclone.global.security.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -34,6 +36,13 @@ public class BoardController {
         List<BoardResponseDto> boardResponseDtoList = boardService.getMyPost(userDetails);
         return ResponseEntity.ok(new DefaultDataRes<>(ResponseMessage.BOARD_GET, boardResponseDtoList));
     }
+
+    @GetMapping("/board")
+    public ResponseEntity<?> getPosts(Pageable pageable, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails ) {
+        PageDto pageDto = boardService.getAllPost(pageable, userDetails);
+        return ResponseEntity.ok(new DefaultDataRes<>(ResponseMessage.BOARD_GET, pageDto));
+    }
+
 
     @PutMapping(value = "/board/{boardId}")
     public ResponseEntity<?> updateBoard(@PathVariable Long boardId, @RequestBody BoardUpdateRequestDto boardRequestDto, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {

@@ -54,9 +54,10 @@ public class LikeService {
     public ResponseEntity<DefaultDataRes<?>> getLikeBoards(Member member) {
         List<Board> boardList = likeRepository.findAllByMemberId(member.getId()).stream().map(Like::getBoard).toList();
         List<BoardResponseDto> boardDtoList = boardList.stream().map(BoardResponseDto::new).toList();
-        if (boardList.isEmpty()){
-            return ResponseEntity.status(StatusCode.NO_CONTENT).body(new DefaultDataRes<List<BoardResponseDto>>(ResponseMessage.BOARD_GET, boardDtoList));
+        for (BoardResponseDto b : boardDtoList) {
+            b.setLikeStatus(true);
         }
+
         return ResponseEntity.ok(new DefaultDataRes<List<BoardResponseDto>>(ResponseMessage.BOARD_GET, boardDtoList));
     }
 
