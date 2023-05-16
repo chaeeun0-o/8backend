@@ -2,6 +2,7 @@ package com.eightjo.carrotclone.board.controller;
 
 import com.eightjo.carrotclone.board.dto.BoardRequestDto;
 import com.eightjo.carrotclone.board.dto.BoardResponseDto;
+import com.eightjo.carrotclone.board.dto.BoardUpdateRequestDto;
 import com.eightjo.carrotclone.board.service.BoardService;
 import com.eightjo.carrotclone.global.dto.http.DefaultDataRes;
 import com.eightjo.carrotclone.global.dto.http.ResponseMessage;
@@ -35,7 +36,7 @@ public class BoardController {
     }
 
     @PutMapping(value = "/board/{boardId}")
-    public ResponseEntity<?> updateBoard(@PathVariable Long boardId, @ModelAttribute BoardRequestDto boardRequestDto, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<?> updateBoard(@PathVariable Long boardId, @RequestBody BoardUpdateRequestDto boardRequestDto, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return boardService.updateBoard(boardId, boardRequestDto, userDetails);
     }
 

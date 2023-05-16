@@ -2,6 +2,7 @@ package com.eightjo.carrotclone.board.entity;
 
 
 import com.eightjo.carrotclone.board.dto.BoardRequestDto;
+import com.eightjo.carrotclone.board.dto.BoardUpdateRequestDto;
 import com.eightjo.carrotclone.global.entity.TimeStamped;
 import com.eightjo.carrotclone.like.entity.Like;
 import com.eightjo.carrotclone.map.Address;
@@ -54,17 +55,13 @@ public class Board extends TimeStamped {
         this.title = boardRequestDto.getTitle();
         this.image = imgPath;
         this.content = boardRequestDto.getContent();
-        this.price = boardRequestDto.getPrice();
+        this.price = Long.parseLong(boardRequestDto.getPrice());
         this.likes = new ArrayList<>();
     }
-    public void setMember(Member member) {
-        this.member = member;
-        this.address = member.getAddress();
-    }
 
-    public void update(BoardRequestDto boardRequestDto) {
+    public void update(BoardUpdateRequestDto boardRequestDto) {
         this.title = boardRequestDto.getTitle();
         this.content = boardRequestDto.getContent();
-        this.price = boardRequestDto.getPrice();
+        this.price = Long.parseLong(boardRequestDto.getPrice());
     }
 }

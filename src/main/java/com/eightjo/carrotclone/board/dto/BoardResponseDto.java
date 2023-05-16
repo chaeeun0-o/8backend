@@ -13,6 +13,8 @@ public class BoardResponseDto {
 
     private String content;
 
+    private String price;
+
     private String address;
 
     private Boolean status;
@@ -33,6 +35,7 @@ public class BoardResponseDto {
         this.status = board.isStatus();
         this.likeStatus = false;
         this.likeCount = board.getLikes().size();
+        this.price = board.getPrice().toString();
     }
 
     public void setLikeStatus(boolean status) {

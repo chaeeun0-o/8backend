@@ -12,5 +12,5 @@ public class BoardRequestDto {
 
     private String content;
 
-    private Long price;
+    private String price;
 }
