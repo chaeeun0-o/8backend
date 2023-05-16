@@ -90,7 +90,7 @@ public class BoardService {
             return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.BOARD_DELETE));
         }
 
-        throw new CustomException(ResponseMessage.BOARD_DELETE_FAIL, StatusCode.INTERNAL_SERVER_ERROR);
+        throw new CustomException(ResponseMessage.BOARD_DELETE_FAIL, StatusCode.NOT_FOUND);
     }
 
     @Transactional(readOnly = true)

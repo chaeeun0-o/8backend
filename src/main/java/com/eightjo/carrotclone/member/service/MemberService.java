@@ -95,10 +95,10 @@ public class MemberService {
         String password = loginRequestDto.getPassword();
 
         Member member = memberRepository.findByUserId(userId).orElseThrow(
-                () -> new CustomException(ResponseMessage.LOGIN_FAIL_ID, StatusCode.UNAUTHORIZED));
+                () -> new CustomException(ResponseMessage.LOGIN_FAIL_ID, StatusCode.BAD_REQUEST));
 
         if (!passwordEncoder.matches(password, member.getPassword())) {
-            throw new CustomException(ResponseMessage.LOGIN_FAIL_PASSWORD, StatusCode.UNAUTHORIZED);
+            throw new CustomException(ResponseMessage.LOGIN_FAIL_PASSWORD, StatusCode.BAD_REQUEST);
         }
 
         //아이디 정보로 토큰 생성
