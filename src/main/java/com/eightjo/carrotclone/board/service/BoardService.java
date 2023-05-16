@@ -43,7 +43,7 @@ public class BoardService {
 
     //게시글 입력
     @Transactional
-    public ResponseEntity<?> createBoard(BoardRequestDto boardRequestDto, UserDetailsImpl userDetailsImp) {
+    public ResponseEntity<DefaultDataRes<BoardResponseDto>> createBoard(BoardRequestDto boardRequestDto, UserDetailsImpl userDetailsImp) {
         if (boardRequestDto.getTitle() == null || boardRequestDto.getImage() == null || boardRequestDto.getPrice() == null) {
             throw new CustomException(ResponseMessage.WRONG_FORMAT, StatusCode.BAD_REQUEST);
         }
@@ -64,7 +64,7 @@ public class BoardService {
     }
     //게시글 수정
     @Transactional
-    public ResponseEntity<?> updateBoard(Long boardId, BoardUpdateRequestDto boardRequestDto, UserDetailsImpl userDetails) {
+    public ResponseEntity<DefaultRes<BoardResponseDto>> updateBoard(Long boardId, BoardUpdateRequestDto boardRequestDto, UserDetailsImpl userDetails) {
         Board board = findBoardOrElseThrow(boardId, ResponseMessage.BOARD_UPDATE_FAIL);
 
         if (!board.getMember().getUserId().equals(userDetails.getMember().getUserId())) {
@@ -77,7 +77,7 @@ public class BoardService {
     }
     //게시글 삭제
     @Transactional
-    public ResponseEntity<?> deleteBoard(Long boardId, UserDetailsImpl userDetails) {
+    public ResponseEntity<DefaultRes<String>> deleteBoard(Long boardId, UserDetailsImpl userDetails) {
         Board board = findBoardOrElseThrow(boardId, ResponseMessage.BOARD_DELETE_FAIL);
 
         if (!board.getMember().getUserId().equals(userDetails.getMember().getUserId())) {
@@ -90,7 +90,7 @@ public class BoardService {
             return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.BOARD_DELETE));
         }
 
-        throw new CustomException(ResponseMessage.BOARD_DELETE_FAIL, StatusCode.INTERNAL_SERVER_ERROR);
+        throw new CustomException(ResponseMessage.BOARD_DELETE_FAIL, StatusCode.NOT_FOUND);
     }
 
     @Transactional(readOnly = true)

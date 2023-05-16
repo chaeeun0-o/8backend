@@ -1,7 +1,9 @@
 package com.eightjo.carrotclone.like.controller;
 
+import com.eightjo.carrotclone.board.dto.BoardResponseDto;
 import com.eightjo.carrotclone.board.entity.Board;
 import com.eightjo.carrotclone.global.dto.http.DefaultDataRes;
+import com.eightjo.carrotclone.global.dto.http.DefaultRes;
 import com.eightjo.carrotclone.global.dto.http.ResponseMessage;
 import com.eightjo.carrotclone.global.security.UserDetailsImpl;
 import com.eightjo.carrotclone.like.entity.Like;
@@ -21,11 +23,11 @@ public class LikeController {
     private final LikeService likeService;
 
     @GetMapping("/api/like")
-    public ResponseEntity<?> boardLike(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<DefaultDataRes<List<BoardResponseDto>>> boardLike(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return likeService.getLikeBoards(userDetails.getMember());
     }
     @PostMapping("/api/like/{boardId}")
-    public ResponseEntity<?> updateLike(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long boardId){
+    public ResponseEntity<DefaultRes<String>> updateLike(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long boardId){
         return likeService.updateBoardLike(boardId, userDetails.getMember());
     }
 }
