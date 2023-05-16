@@ -57,8 +57,8 @@ public class BoardController {
 
 
     @PutMapping("/board/sell/{boardId}")
-    public ResponseEntity<?> changePost(@PathVariable Long boardId, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<Object> changePost(@PathVariable Long boardId, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {
         boardService.changePost(boardId, userDetails);
-        return ResponseEntity.ok(null);asdasd
+        return ResponseEntity.ok(null);
     }
 }
