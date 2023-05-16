@@ -33,13 +33,13 @@ public class BoardController {
     }
 
     @GetMapping("/myBoard")
-    public ResponseEntity<DefaultDataRes<BoardResponseDto>> getMyPosts( @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<DefaultDataRes<List<BoardResponseDto>>> getMyPosts( @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {
         List<BoardResponseDto> boardResponseDtoList = boardService.getMyPost(userDetails);
         return ResponseEntity.ok(new DefaultDataRes<>(ResponseMessage.BOARD_GET, boardResponseDtoList));
     }
 
     @GetMapping("/board")
-    public ResponseEntity<DefaultDataRes<String>> getPosts(Pageable pageable, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails ) {
+    public ResponseEntity<DefaultDataRes<PageDto>> getPosts(Pageable pageable, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails ) {
         PageDto pageDto = boardService.getAllPost(pageable, userDetails);
         return ResponseEntity.ok(new DefaultDataRes<>(ResponseMessage.BOARD_GET, pageDto));
     }
