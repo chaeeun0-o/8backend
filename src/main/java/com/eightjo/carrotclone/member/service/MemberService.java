@@ -75,7 +75,7 @@ public class MemberService {
 
             Member member = new Member(userId, password, nickname);
             address = mapRepository.save(address);
-            member.setAddress(address);
+            member.update(address);
             memberRepository.save(member);
         }
         else {

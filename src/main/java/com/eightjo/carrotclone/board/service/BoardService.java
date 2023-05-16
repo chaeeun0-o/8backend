@@ -3,6 +3,7 @@ package com.eightjo.carrotclone.board.service;
 import com.eightjo.carrotclone.board.Util.S3Uploader;
 import com.eightjo.carrotclone.board.dto.BoardRequestDto;
 import com.eightjo.carrotclone.board.dto.BoardResponseDto;
+import com.eightjo.carrotclone.board.dto.BoardUpdateRequestDto;
 import com.eightjo.carrotclone.board.entity.Board;
 import com.eightjo.carrotclone.board.repository.BoardRepository;
 import com.eightjo.carrotclone.global.dto.PageDto;
@@ -16,6 +17,7 @@ import com.eightjo.carrotclone.global.validator.BoardValidator;
 import com.eightjo.carrotclone.like.repository.LikeRepository;
 import com.eightjo.carrotclone.member.entity.Member;
 import com.eightjo.carrotclone.member.repository.MemberRepository;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,9 +48,11 @@ public class BoardService {
             throw new CustomException(ResponseMessage.WRONG_FORMAT, StatusCode.BAD_REQUEST);
         }
         try {
+            Member member = getMember(userDetailsImp.getMember().getUserId());
             String imgPath = s3Uploader.upload(boardRequestDto.getImage());
             Board board = new Board(boardRequestDto, imgPath);
-            board.setMember(userDetailsImp.getMember());
+            board.setMember(member);
+            board.setAddress(member.getAddress());
 
             boardRepository.save(board);
             BoardResponseDto boardResponseDto = new BoardResponseDto(board);
@@ -60,13 +64,13 @@ public class BoardService {
     }
     //게시글 수정
     @Transactional
-    public ResponseEntity<?> updateBoard(Long boardId, BoardRequestDto boardRequestDto, UserDetailsImpl userDetails) {
+    public ResponseEntity<?> updateBoard(Long boardId, BoardUpdateRequestDto boardRequestDto, UserDetailsImpl userDetails) {
         Board board = findBoardOrElseThrow(boardId, ResponseMessage.BOARD_UPDATE_FAIL);
 
         if (!board.getMember().getUserId().equals(userDetails.getMember().getUserId())) {
             throw new CustomException(ResponseMessage.BOARD_UPDATE_FAIL, StatusCode.BAD_REQUEST);
         }
-
+        System.out.println(boardRequestDto.toString());
         board.update(boardRequestDto);
         BoardResponseDto boardResponseDto = new BoardResponseDto(board);
         return ResponseEntity.ok(new DefaultRes<BoardResponseDto>(ResponseMessage.BOARD_UPDATE));
