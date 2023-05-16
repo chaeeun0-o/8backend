@@ -17,7 +17,7 @@ public class BoardResponseDto {
 
     private Boolean status;
 
-    private boolean likeStatus;
+    private Boolean likeStatus;
 
     private int likeCount;
 
