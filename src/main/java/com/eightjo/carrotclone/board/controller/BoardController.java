@@ -51,6 +51,4 @@ public class BoardController {
         boardService.changePost(boardId, userDetails);
         return ResponseEntity.ok(null);
     }
-
-
 }
