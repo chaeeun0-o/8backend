@@ -1,6 +1,7 @@
 package com.eightjo.carrotclone.chat.entity;
 
 
+import jakarta.persistence.Entity;
 import com.eightjo.carrotclone.board.entity.Board;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
