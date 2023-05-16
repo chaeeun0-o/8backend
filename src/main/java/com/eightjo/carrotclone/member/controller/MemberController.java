@@ -31,25 +31,25 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@RequestBody @Valid SingupRequestDto signupRequestDto ) {
+    public ResponseEntity<DefaultRes<String>> signup(@RequestBody @Valid SingupRequestDto signupRequestDto ) {
         memberService.signup(signupRequestDto);
         return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.CREATED_USER));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public ResponseEntity<DefaultRes<String>> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         memberService.login(loginRequestDto, response);
         return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.LOGIN_SUCCESS));
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<?> logout(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletRequest request) {
+    public ResponseEntity<DefaultRes<String>> logout(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletRequest request) {
         memberService.logout(userDetails.getMember(), request);
         return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.LOGOUT_SUCCESS));
     }
 
     @GetMapping("/newAccess")
-    public ResponseEntity<?> newAccessToken(
+    public ResponseEntity<Object> newAccessToken(
             @CookieValue(value = "Refresh_Token", required = false) String refreshToken,
             HttpServletRequest request,
             HttpServletResponse response){
@@ -58,7 +58,7 @@ public class MemberController {
     }
 
     @GetMapping("/address")
-    public ResponseEntity<?> getAddress(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<DefaultRes<String>> getAddress(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         memberService.getAddress(userDetails.getMember());
         return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.LOGOUT_SUCCESS));
     }

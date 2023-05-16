@@ -34,7 +34,7 @@ public class LikeService {
      * 좋아요
      */
     @Transactional
-    public ResponseEntity<?> updateBoardLike(Long id, Member member) {
+    public ResponseEntity<DefaultRes<String>> updateBoardLike(Long id, Member member) {
         // 게시글 존재확인
         Board board = boardValidator.validateExistPost(id);
         Like boardLike = isPostLike(member, board);
@@ -51,7 +51,7 @@ public class LikeService {
     }
 
     @Transactional
-    public ResponseEntity<DefaultDataRes<?>> getLikeBoards(Member member) {
+    public ResponseEntity<DefaultDataRes<List<BoardResponseDto>>> getLikeBoards(Member member) {
         List<Board> boardList = likeRepository.findAllByMemberId(member.getId()).stream().map(Like::getBoard).toList();
         List<BoardResponseDto> boardDtoList = boardList.stream().map(BoardResponseDto::new).toList();
         for (BoardResponseDto b : boardDtoList) {

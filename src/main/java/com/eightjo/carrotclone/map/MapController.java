@@ -20,13 +20,13 @@ public class MapController {
     private final MapService mapService;
 
     @PostMapping("/coordinate")
-    public ResponseEntity<?> getAddress(@RequestBody @Valid KakaoMapRequestDto kakaoMapRequestDto) {
+    public ResponseEntity<DefaultDataRes<MapResponseDto>> getAddress(@RequestBody @Valid KakaoMapRequestDto kakaoMapRequestDto) {
         MapResponseDto mapResponseDto = mapService.getAddress(kakaoMapRequestDto);
         return ResponseEntity.ok(new DefaultDataRes<>(ResponseMessage.KAKAO_GET_ADDRESS_SUCCESS, mapResponseDto));
     }
 
     @PostMapping("/address")
-    public ResponseEntity<?> saveAddress(@RequestBody @Valid MapRequestDto mapRequestDto) {
+    public ResponseEntity<DefaultRes<String>> saveAddress(@RequestBody @Valid MapRequestDto mapRequestDto) {
         mapService.validAddressApi(mapRequestDto);
         return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.KAKAO_GET_ADDRESS_SUCCESS));
     }
