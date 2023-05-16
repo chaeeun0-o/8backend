@@ -39,7 +39,7 @@ public class BoardController {
     }
 
     @GetMapping("/board")
-    public ResponseEntity<DefaultDataRes<String>> getPosts(Pageable pageable, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails ) {
+    public ResponseEntity<DefaultDataRes<PageDto>> getPosts(Pageable pageable, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails ) {
         PageDto pageDto = boardService.getAllPost(pageable, userDetails);
         return ResponseEntity.ok(new DefaultDataRes<>(ResponseMessage.BOARD_GET, pageDto));
     }
