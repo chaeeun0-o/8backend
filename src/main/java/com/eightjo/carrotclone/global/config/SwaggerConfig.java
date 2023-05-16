@@ -19,7 +19,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
-                .group("SongGPT")
+                .group("Carrot Clone")
                 .pathsToMatch("/api/**")
                 .build();
     }

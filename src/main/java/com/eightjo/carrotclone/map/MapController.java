@@ -28,8 +28,8 @@ public class MapController {
     }
 
     @PostMapping("/address")
-    public ResponseEntity<?> saveAddress(@RequestBody @Valid MapRequestDto MapRequestDto) {
-//        mapService.saveAddress(kakaoMapRequestDto);
+    public ResponseEntity<?> saveAddress(@RequestBody @Valid MapRequestDto mapRequestDto) {
+        mapService.validAddressApi(mapRequestDto);
         return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.KAKAO_GET_ADDRESS_SUCCESS));
     }
 }

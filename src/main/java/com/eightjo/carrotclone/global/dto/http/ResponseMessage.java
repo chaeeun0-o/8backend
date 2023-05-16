@@ -16,6 +16,7 @@ public class ResponseMessage {
 
     public static final String READ_USER = "회원 정보 조회 성공";
     public static final String NOT_FOUND_USER = "회원을 찾을 수 없습니다.";
+
     public static final String ALREADY_ENROLLED_USER = "이미 가입한 아이디입니다.";
     public static final String ALREADY_ENROLLED_NICKNAME = "이미 가입한 닉네임입니다.";
     public static final String CREATED_USER = "회원 가입 성공";

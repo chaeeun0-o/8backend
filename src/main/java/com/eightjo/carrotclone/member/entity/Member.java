@@ -1,5 +1,7 @@
 package com.eightjo.carrotclone.member.entity;
 
+import com.eightjo.carrotclone.map.Address;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -30,6 +32,11 @@ public class Member {
     @Column(nullable = false)
     private String imageUrl;
 
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    @JsonBackReference
+    private Address address;
+
     public Member(String userId, String password, String nickname) {
         this.userId = userId;
         this.password = password;
@@ -40,4 +47,6 @@ public class Member {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public void update(Address address){this.address = address;}
 }

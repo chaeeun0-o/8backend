@@ -22,7 +22,7 @@ public class BoardValidator {
 
     public Board validateExistPost(Long id) {
         return boardRepository.findById(id).orElseThrow(
-                () -> new CustomException(ResponseMessage.NOT_FOUND_USER, StatusCode.BAD_REQUEST)
+                () -> new CustomException(ResponseMessage.BOARD_GET_FAIL_ID, StatusCode.BAD_REQUEST)
         );
     }
 }

@@ -49,10 +49,17 @@ public class MemberController {
     }
 
     @GetMapping("/newAccess")
-    public void newAccessToken(
+    public ResponseEntity<?> newAccessToken(
             @CookieValue(value = "Refresh_Token", required = false) String refreshToken,
             HttpServletRequest request,
             HttpServletResponse response){
+        memberService.callNewAccessToken(refreshToken, request, response);
+        return ResponseEntity.ok(null);
+    }
 
+    @GetMapping("/address")
+    public ResponseEntity<?> getAddress(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        memberService.getAddress(userDetails.getMember());
+        return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.LOGOUT_SUCCESS));
     }
 }

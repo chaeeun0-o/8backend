@@ -1,5 +1,7 @@
 package com.eightjo.carrotclone.member.dto;
 
+import com.eightjo.carrotclone.map.Dto.DefaultAddressDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,5 +20,8 @@ public class SingupRequestDto {
     private String password;
 
     @Size(min =5, max = 10 , message = "닉네임의 길이는 5자 이상, 10자 이하이어야 합니다.")
-    private  String nickname;
+    private String nickname;
+
+    @JsonProperty("address")
+    private DefaultAddressDto address;
 }
