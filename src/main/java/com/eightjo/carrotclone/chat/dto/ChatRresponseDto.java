@@ -1,6 +1,5 @@
 package com.eightjo.carrotclone.chat.dto;
 
-import com.eightjo.carrotclone.board.entity.Board;
 import com.eightjo.carrotclone.chat.entity.ChatList;
 import lombok.Data;
 
