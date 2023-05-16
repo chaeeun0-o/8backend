@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface ChatRepository extends JpaRepository<ChatList, Long> {
-    Page<ChatList> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
 }

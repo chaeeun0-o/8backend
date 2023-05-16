@@ -31,4 +31,12 @@ public class Address {
         this.x = 0;
         this.y = 0;
     }
+
+    public Address(String region1depthName, String region2depthName, String region3depthName, double x, double y) {
+        this.region1depthName = region1depthName;
+        this.region2depthName = region2depthName;
+        this.region3depthName = region3depthName;
+        this.x = x;
+        this.y = y;
+    }
 }
