@@ -11,6 +11,9 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MapService {
@@ -42,6 +45,38 @@ public class MapService {
                 documents.getAddress().getRegion2depthName(),
                 documents.getAddress().getRegion3depthName());
     }
+
+//    public MapResponseDto getAddressList(Address address,int size) {
+//        List<Address> addressList = new ArrayList<>();
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add(MapConfig.KEY_NAME, MapConfig.KEY_PREFIX + mapConfig.getApiKey());
+//
+//        ResponseEntity<KakaoRegionResponseDto> responseEntity = restTemplate.exchange(
+//                MapConfig.REGION_URL + "x=" + address.getX() + "&y=" + address.getY(),
+//                HttpMethod.GET,
+//                new HttpEntity<>(null, headers),
+//                KakaoRegionResponseDto.class);
+//
+//        KakaoRegionResponseDto regionResponseDto = responseEntity.getBody();
+//        if(regionResponseDto == null){
+//            throw new CustomException(ResponseMessage.KAKAO_GET_ADDRESS_FAIL,StatusCode.METHOD_NOT_ALLOWED);
+//        }
+//        if(regionResponseDto.getMeta().getTotalCount() == 0){
+//            throw new CustomException(ResponseMessage.KAKAO_GET_ADDRESS_FAIL,StatusCode.METHOD_NOT_ALLOWED);
+//        }
+//
+//        KakaoRegionResponseDto.RegionDocuments documents = regionResponseDto.getDocuments().get(1);
+//
+//        addressList.add( new Address(
+//                documents.getRegion1depthName(),
+//                documents.getRegion2depthName(),
+//                documents.getRegion3depthName(),
+//                documents.getX(),
+//                documents.getY()));
+//
+//        return
+//    }
 
     public KakaoMapRequestDto validAddressXY(MapRequestDto mapRequestDto) {
         KakaoAddressResponseDto kakaoAddressResponseDto = validAddress(mapRequestDto);

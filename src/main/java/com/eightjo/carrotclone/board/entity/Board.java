@@ -44,7 +44,7 @@ public class Board extends TimeStamped {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @Column(name = "address_id")
+    @JoinColumn(name = "address_id")
     private Address address;
 
     @OneToMany(mappedBy = "board", orphanRemoval = true, cascade = CascadeType.ALL)
