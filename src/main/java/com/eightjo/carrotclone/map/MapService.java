@@ -38,7 +38,7 @@ public class MapService {
         if(kakaoMapResponseDto.getDocuments().isEmpty()){
             throw new CustomException(ResponseMessage.KAKAO_GET_ADDRESS_FAIL,StatusCode.METHOD_NOT_ALLOWED);
         }
-        Documents documents = kakaoMapResponseDto.getDocuments().get(1);
+        Documents documents = kakaoMapResponseDto.getDocuments().get(0);
 
         return new MapResponseDto(
                 documents.getAddress().getRegion1depthName(),
