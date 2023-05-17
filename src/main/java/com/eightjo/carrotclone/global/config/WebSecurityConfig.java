@@ -48,7 +48,7 @@ public class WebSecurityConfig {
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeHttpRequests()
-                .requestMatchers("api/member/signup", "api/member/login", "api/member/checkId", , "api/member/checkAddress").permitAll()
+                .requestMatchers("api/member/signup", "api/member/login", "api/member/checkId", "api/map/checkAddress").permitAll()
                 .requestMatchers("/swagger*/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/**").permitAll()
                 .anyRequest().authenticated()
