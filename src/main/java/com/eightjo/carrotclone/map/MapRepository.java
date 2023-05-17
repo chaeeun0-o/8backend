@@ -7,7 +7,5 @@ import java.util.Optional;
 public interface MapRepository extends JpaRepository<Address,Long> {
     Optional<Address> findByRegion1depthNameAndRegion2depthNameAndRegion3depthName(String region1depthName, String region2depthName, String region3depthName);
 
-    void findByAddress(Address address1);
-
-    Optional<Address> findByXY(double x, double y);
+    Optional<Address> findByXAndY(double x, double y);
 }

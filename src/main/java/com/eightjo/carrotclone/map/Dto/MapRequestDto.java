@@ -23,4 +23,10 @@ public class MapRequestDto {
         this.region2depthName = address.getRegion2depthName();
         this.region3depthName = address.getRegion3depthName();
     }
+
+    public MapRequestDto(String region1depthName, String region2depthName, String region3depthName) {
+        this.region1depthName = region1depthName;
+        this.region2depthName = region2depthName;
+        this.region3depthName = region3depthName;
+    }
 }
