@@ -30,4 +30,14 @@ public class MapController {
         mapService.validAddressApi(mapRequestDto);
         return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.KAKAO_GET_ADDRESS_SUCCESS));
     }
+    @GetMapping("/checkAddress")
+    public ResponseEntity<Object> checkAddress(
+            @RequestParam("region1depthName") String region1depthName,
+            @RequestParam("region2depthName") String region2depthName,
+            @RequestParam("region3depthName") String region3depthName) {
+        return mapService.checkAddress(
+                region1depthName,
+                region2depthName,
+                region3depthName);
+    }
 }

@@ -4,6 +4,7 @@ import com.eightjo.carrotclone.global.dto.http.DefaultDataRes;
 import com.eightjo.carrotclone.global.dto.http.DefaultRes;
 import com.eightjo.carrotclone.global.dto.http.ResponseMessage;
 import com.eightjo.carrotclone.global.security.UserDetailsImpl;
+import com.eightjo.carrotclone.member.dto.CheckIdResponseDto;
 import com.eightjo.carrotclone.member.dto.LoginRequestDto;
 import com.eightjo.carrotclone.member.dto.SingupRequestDto;
 import com.eightjo.carrotclone.member.service.MemberService;
@@ -34,6 +35,12 @@ public class MemberController {
     public ResponseEntity<DefaultRes<String>> signup(@RequestBody @Valid SingupRequestDto signupRequestDto ) {
         memberService.signup(signupRequestDto);
         return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.CREATED_USER));
+    }
+
+    @GetMapping("/checkId")
+    public ResponseEntity<Object> checkId(@RequestParam("id") String id) {
+        memberService.checkId(id);
+        return ResponseEntity.ok(null);
     }
 
     @PostMapping("/login")

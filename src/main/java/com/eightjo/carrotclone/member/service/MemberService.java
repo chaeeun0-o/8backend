@@ -85,14 +85,14 @@ public class MemberService {
 
     }
 
-    public void checkId(CheckIdResponseDto checkIdResponseDto) {
-        String userId = checkIdResponseDto.getUserId();
+    public void checkId(String id) {
         //중복 아이디 체크
-        Optional<Member> found = memberRepository.findByUserId(userId);
+        Optional<Member> found = memberRepository.findByUserId(id);
         if (found.isPresent()) {
             throw new CustomException(ResponseMessage.ALREADY_ENROLLED_USER, StatusCode.Conflict);
         }
     }
+
 
     //로그인
     @Transactional
