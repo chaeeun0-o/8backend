@@ -102,6 +102,9 @@ public class BoardService {
 
         for (Board board : responseList) {
             BoardResponseDto boardResponseDto = new BoardResponseDto(board);
+            if (board.getMember().getUserId().equals(member.getUserId())){
+                continue;
+            }
             if (likeRepository.findByMemberIdAndBoardId(member.getId(), board.getId()).isPresent()) {
                 boardResponseDto.setLikeStatus(true);
             }
