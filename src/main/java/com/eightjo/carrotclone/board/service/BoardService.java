@@ -96,15 +96,15 @@ public class BoardService {
     @Transactional(readOnly = true)
     public PageDto getAllPost(Pageable pageable, UserDetailsImpl userDetails) {
         Member member = getMember(userDetails.getMember().getUserId());
-        Page<Board> posts = boardRepository.findAllByAddressId(pageable, member.getAddress().getId());
+        List<Long> memberIdList = new ArrayList<>();
+        memberIdList.add(member.getId());
+        Page<Board> posts = boardRepository.findAllByAddressIdAndMemberIdNotIn(pageable, member.getAddress().getId(), memberIdList);
         List<Board> responseList = posts.getContent();
         List<BoardResponseDto> postResponseDtoList = new ArrayList<>();
 
         for (Board board : responseList) {
             BoardResponseDto boardResponseDto = new BoardResponseDto(board);
-            if (board.getMember().getUserId().equals(member.getUserId())){
-                continue;
-            }
+
             if (likeRepository.findByMemberIdAndBoardId(member.getId(), board.getId()).isPresent()) {
                 boardResponseDto.setLikeStatus(true);
             }
