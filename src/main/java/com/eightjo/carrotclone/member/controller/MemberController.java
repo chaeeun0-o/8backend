@@ -6,6 +6,7 @@ import com.eightjo.carrotclone.global.dto.http.ResponseMessage;
 import com.eightjo.carrotclone.global.security.UserDetailsImpl;
 import com.eightjo.carrotclone.member.dto.CheckIdResponseDto;
 import com.eightjo.carrotclone.member.dto.LoginRequestDto;
+import com.eightjo.carrotclone.member.dto.LoginResponseDto;
 import com.eightjo.carrotclone.member.dto.SingupRequestDto;
 import com.eightjo.carrotclone.member.service.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,9 +45,9 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<DefaultRes<String>> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        memberService.login(loginRequestDto, response);
-        return ResponseEntity.ok(new DefaultRes<>(ResponseMessage.LOGIN_SUCCESS));
+    public ResponseEntity<DefaultDataRes<LoginResponseDto>> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+        LoginResponseDto loginResponseDto = memberService.login(loginRequestDto, response);
+        return ResponseEntity.ok(new DefaultDataRes<LoginResponseDto>(ResponseMessage.LOGIN_SUCCESS, loginResponseDto));
     }
 
     @GetMapping("/logout")
