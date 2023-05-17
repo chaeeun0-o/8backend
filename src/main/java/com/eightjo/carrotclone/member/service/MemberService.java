@@ -12,10 +12,7 @@ import com.eightjo.carrotclone.map.Dto.KakaoMapRequestDto;
 import com.eightjo.carrotclone.map.Dto.MapRequestDto;
 import com.eightjo.carrotclone.map.MapRepository;
 import com.eightjo.carrotclone.map.MapService;
-import com.eightjo.carrotclone.member.dto.LoginRequestDto;
-import com.eightjo.carrotclone.member.dto.LoginResponseDto;
-import com.eightjo.carrotclone.member.dto.SingupRequestDto;
-import com.eightjo.carrotclone.member.dto.TokenDto;
+import com.eightjo.carrotclone.member.dto.*;
 import com.eightjo.carrotclone.member.entity.Member;
 import com.eightjo.carrotclone.member.repository.MemberRepository;
 import jakarta.servlet.http.Cookie;
@@ -88,6 +85,15 @@ public class MemberService {
 
     }
 
+    public void checkId(CheckIdResponseDto checkIdResponseDto) {
+        String userId = checkIdResponseDto.getUserId();
+        //중복 아이디 체크
+        Optional<Member> found = memberRepository.findByUserId(userId);
+        if (found.isPresent()) {
+            throw new CustomException(ResponseMessage.ALREADY_ENROLLED_USER, StatusCode.Conflict);
+        }
+    }
+
     //로그인
     @Transactional
     public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
@@ -157,4 +163,5 @@ public class MemberService {
         String newAccessToken = jwtUtil.createToken(userId, jwtUtil.getAccessKey(), JwtUtil.ACCESS_TOKEN);
         jwtUtil.setHeaderAccessToken(response, newAccessToken);
     }
+
 }
