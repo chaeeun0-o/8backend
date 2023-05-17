@@ -96,7 +96,7 @@ public class MemberService {
 
     //로그인
     @Transactional
-    public void login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public LoginResponseDto login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         String userId = loginRequestDto.getUserId();
         String password = loginRequestDto.getPassword();
 
@@ -120,7 +120,8 @@ public class MemberService {
             refreshTokenRepository.save(newToken);
         }
         setHeader(response, token);
-        new LoginResponseDto(member.getNickname());
+
+        return new LoginResponseDto(new LoginResponseDto.SignupAddress(member.getAddress()),member.getNickname(), member.getUserId());
     }
 
     //로그아웃

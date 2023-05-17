@@ -63,6 +63,7 @@ public class WebSecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://3.34.2.114:3000");
 //        config.addAllowedOrigin("http://8-carrot.s3-website.ap-northeast-2.amazonaws.com");
         config.addExposedHeader(JwtUtil.ACCESS_TOKEN);
         config.addExposedHeader(JwtUtil.REFRESH_TOKEN);
