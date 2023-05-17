@@ -44,6 +44,12 @@ public class BoardController {
         return ResponseEntity.ok(new DefaultDataRes<>(ResponseMessage.BOARD_GET, pageDto));
     }
 
+    @GetMapping("/board/{boardId}")
+    public ResponseEntity<DefaultDataRes<BoardResponseDto>> getPost(@PathVariable Long boardId, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails ) {
+        BoardResponseDto boardResponseDto = boardService.getPost(boardId, userDetails);
+        return ResponseEntity.ok(new DefaultDataRes<>(ResponseMessage.BOARD_GET, boardResponseDto));
+    }
+
 
     @PutMapping(value = "/board/{boardId}")
     public ResponseEntity<DefaultRes<BoardResponseDto>> updateBoard(@PathVariable Long boardId, @RequestBody BoardUpdateRequestDto boardRequestDto, @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {
