@@ -48,44 +48,60 @@ public class MapService {
                 documents.getAddress().getRegion3depthName());
     }
 
-//    public List<Long> getAddressList(Address address,int size) {
-//        if ( size < 0 || 3 < size ){
-//            throw new CustomException(ResponseMessage.WRONG_FORMAT, HttpStatus.BAD_REQUEST.value());
-//        }
-//
-//        List<Long> addressIdList = new ArrayList<>();
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add(MapConfig.KEY_NAME, MapConfig.KEY_PREFIX + mapConfig.getApiKey());
-//
-//        ResponseEntity<KakaoRegionResponseDto> responseEntity = null;
-//
-//        for (int i = 0; i < size; i++) {
-//            responseEntity = restTemplate.exchange(
-//                    MapConfig.REGION_URL + "x=" + address.getX() + "&y=" + address.getY(),
-//                    HttpMethod.GET,
-//                    new HttpEntity<>(null, headers),
-//                    KakaoRegionResponseDto.class);
-//
-//            KakaoRegionResponseDto regionResponseDto = responseEntity.getBody();
-//            KakaoRegionResponseDto.RegionDocuments documents = regionResponseDto.getDocuments().get(1);
-//
-//            Optional<Address> findAddress =  mapRepository.findByXY(documents.getX(), documents.getY());
-//
-//            if (findAddress.isPresent()){
-//
-//            }
-//
-//            Address newAddress = new Address(
-//                    documents.getRegion1depthName(),
-//                    documents.getRegion2depthName(),
-//                    documents.getRegion3depthName(),
-//                    documents.getX(),
-//                    documents.getY());
-//
-//        }
-//        return addressList;
-//    }
+    public List<Long> getAddressList(Address address, int size) {
+        if ( size < 0 || 3 < size ) {
+            throw new CustomException(ResponseMessage.WRONG_FORMAT, HttpStatus.BAD_REQUEST.value());
+        }
+
+        List<Long> addressIdList = new ArrayList<>();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(MapConfig.KEY_NAME, MapConfig.KEY_PREFIX + mapConfig.getApiKey());
+
+        ResponseEntity<KakaoRegionResponseDto> responseEntity = null;
+
+        for (int i = 0; i < size * 4; i++) {
+            double x = address.getX();
+            double y = address.getY();
+
+            if (i % 4 == 0) {
+                x += MapConfig.BASIC_METER * size;
+            }
+            else if (i % 4 == 1) {
+                x -= MapConfig.BASIC_METER * size;
+            }
+            else if (i % 4 == 2) {
+                y += MapConfig.BASIC_METER * size;
+            }
+            else {
+                y -= MapConfig.BASIC_METER * size;
+            }
+
+
+            responseEntity = restTemplate.exchange(
+                    MapConfig.REGION_URL + "x=" + x + "&y=" + y,
+                    HttpMethod.GET,
+                    new HttpEntity<>(null, headers),
+                    KakaoRegionResponseDto.class);
+
+            KakaoRegionResponseDto regionResponseDto = responseEntity.getBody();
+            KakaoRegionResponseDto.RegionDocuments documents = regionResponseDto.getDocuments().get(1);
+
+            Optional<Address> findAddress =  mapRepository.findByXAndY(documents.getX(), documents.getY());
+            findAddress.ifPresent(value -> addressIdList.add(value.getId()));
+
+            if (findAddress.isEmpty()) {
+                Address newAddress = new Address(
+                        documents.getRegion1depthName(),
+                        documents.getRegion2depthName(),
+                        documents.getRegion3depthName(),
+                        documents.getX(),
+                        documents.getY());
+                addressIdList.add(mapRepository.save(newAddress).getId());
+            }
+        }
+        return addressIdList;
+    }
 
     public KakaoMapRequestDto validAddressXY(MapRequestDto mapRequestDto) {
         KakaoAddressResponseDto kakaoAddressResponseDto = validAddress(mapRequestDto);
@@ -114,5 +130,19 @@ public class MapService {
         if (kakaoAddressResponseDto.getMeta().getTotalCount() == 0)
             throw new CustomException(ResponseMessage.KAKAO_GET_ADDRESS_FAIL, StatusCode.METHOD_NOT_ALLOWED);
         return kakaoAddressResponseDto;
+    }
+
+    public ResponseEntity<Object> checkAddress(String region1depthName, String region2depthName, String region3depthName) {
+        Optional<Address> optionalAddress = mapRepository.findByRegion1depthNameAndRegion2depthNameAndRegion3depthName(
+                region1depthName,
+                region2depthName,
+                region3depthName);
+
+        if (optionalAddress.isPresent()) {
+            return ResponseEntity.ok(null);
+        }
+
+        validAddress(new MapRequestDto(region1depthName, region2depthName, region3depthName));
+        return ResponseEntity.ok(null);
     }
 }
