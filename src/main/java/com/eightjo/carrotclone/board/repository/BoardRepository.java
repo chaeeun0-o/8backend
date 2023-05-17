@@ -12,4 +12,5 @@ public interface BoardRepository extends JpaRepository <Board,Long> {
     Page<Board> findAllByAddressIdAndMemberIdNotIn(Pageable pageable, Long address_id, List<Long> memberList);
 
     List<Board> findAllByMemberId(Long member_id);
+    Page<Board> findAllByAddressIdInAndMemberIdNotIn(Pageable pageable, List<Long> addressIdList, List<Long> memberIdList);
 }
