@@ -1,14 +1,9 @@
 package com.eightjo.carrotclone.map.Dto;
 
-import ch.qos.logback.core.model.Model;
-import com.eightjo.carrotclone.chat.ChatService;
-import com.eightjo.carrotclone.chat.entity.ChatRoom;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
