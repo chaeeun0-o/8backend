@@ -2,10 +2,10 @@ package com.eightjo.carrotclone.member.dto;
 
 import com.eightjo.carrotclone.map.Dto.DefaultAddressDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import jakarta.validation.constraints.Pattern;
 
 @Getter
 @Setter
