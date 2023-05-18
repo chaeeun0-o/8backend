@@ -1,7 +1,12 @@
 package com.eightjo.carrotclone.map;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "seoul_address")
 @Data
@@ -22,6 +27,12 @@ public class Address {
 
     private double x;
     private double y;
+
+    @OneToMany(mappedBy = "parent", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<NearAddress> nearParentAddress = new ArrayList<>();
+
+    @OneToMany(mappedBy = "child", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<NearAddress> nearChildAddress = new ArrayList<>();
 
 
     public Address(String region1depthName, String region2depthName, String region3depthName) {
