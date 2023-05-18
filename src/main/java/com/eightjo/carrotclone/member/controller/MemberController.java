@@ -4,25 +4,17 @@ import com.eightjo.carrotclone.global.dto.http.DefaultDataRes;
 import com.eightjo.carrotclone.global.dto.http.DefaultRes;
 import com.eightjo.carrotclone.global.dto.http.ResponseMessage;
 import com.eightjo.carrotclone.global.security.UserDetailsImpl;
-import com.eightjo.carrotclone.member.dto.CheckIdResponseDto;
 import com.eightjo.carrotclone.member.dto.LoginRequestDto;
 import com.eightjo.carrotclone.member.dto.LoginResponseDto;
 import com.eightjo.carrotclone.member.dto.SingupRequestDto;
 import com.eightjo.carrotclone.member.service.MemberService;
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
-
-
-import java.lang.reflect.Member;
 
 @RestController
 @RequiredArgsConstructor
