@@ -3,14 +3,20 @@ package com.eightjo.carrotclone.map;
 import com.eightjo.carrotclone.global.dto.http.DefaultDataRes;
 import com.eightjo.carrotclone.global.dto.http.DefaultRes;
 import com.eightjo.carrotclone.global.dto.http.ResponseMessage;
+import com.eightjo.carrotclone.global.security.UserDetailsImpl;
+import com.eightjo.carrotclone.map.Dto.DefaultAddressDto;
 import com.eightjo.carrotclone.map.Dto.KakaoMapRequestDto;
 import com.eightjo.carrotclone.map.Dto.MapRequestDto;
 import com.eightjo.carrotclone.map.Dto.MapResponseDto;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Kakao Map Api", description = "Kakao Map 연결 API")
 @RestController
@@ -39,5 +45,13 @@ public class MapController {
                 region1depthName,
                 region2depthName,
                 region3depthName);
+    }
+
+    @PostMapping
+    public ResponseEntity<DefaultDataRes<List<DefaultAddressDto>>> setAddressList(
+            @RequestParam("size") Integer size,
+            @Parameter(hidden = true) @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<DefaultAddressDto> defaultAddressDtoList = mapService.setAddressList(size, userDetails);
+        return ResponseEntity.ok(new DefaultDataRes<>(ResponseMessage.KAKAO_GET_ADDRESS_SUCCESS, defaultAddressDtoList));
     }
 }

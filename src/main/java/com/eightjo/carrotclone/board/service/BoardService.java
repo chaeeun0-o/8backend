@@ -15,6 +15,10 @@ import com.eightjo.carrotclone.global.exception.CustomException;
 import com.eightjo.carrotclone.global.security.UserDetailsImpl;
 import com.eightjo.carrotclone.global.validator.BoardValidator;
 import com.eightjo.carrotclone.like.repository.LikeRepository;
+import com.eightjo.carrotclone.map.Address;
+import com.eightjo.carrotclone.map.MapRepository;
+import com.eightjo.carrotclone.map.NearAddress;
+import com.eightjo.carrotclone.map.NearAddressRepository;
 import com.eightjo.carrotclone.member.entity.Member;
 import com.eightjo.carrotclone.member.repository.MemberRepository;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -39,6 +43,8 @@ public class BoardService {
     private final LikeRepository likeRepository;
     private final MemberRepository memberRepository;
     private final BoardValidator boardValidator;
+    private final NearAddressRepository nearAddressRepository;
+    private final MapRepository mapRepository;
     private final S3Uploader s3Uploader;
 
     //게시글 입력
@@ -95,10 +101,19 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public PageDto getAllPost(Pageable pageable, UserDetailsImpl userDetails) {
-        Member member = getMember(userDetails.getMember().getUserId());
-        List<Long> memberIdList = new ArrayList<>();
-        memberIdList.add(member.getId());
-        Page<Board> posts = boardRepository.findAllByAddressIdAndMemberIdNotIn(pageable, member.getAddress().getId(), memberIdList);
+        Member member = memberRepository.findByUserId(userDetails.getMember().getUserId()).orElseThrow(
+                () -> new CustomException(ResponseMessage.NOT_FOUND_USER, StatusCode.UNAUTHORIZED)
+        );
+        Address address = mapRepository.findById(member.getAddress().getId()).orElseThrow(
+                () -> new CustomException(ResponseMessage.KAKAO_GET_ADDRESS_FAIL, StatusCode.BAD_REQUEST)
+        );
+        List<Member> memberList = new ArrayList<>();
+        memberList.add(member);
+        List<Address> nearAddressList = nearAddressRepository.findAllByParentId(member.getAddress().getId()).stream().map(NearAddress::getChild).toList();
+
+
+//        Page<Board> posts = boardRepository.findAllByAddressIdAndMemberIdNotIn(pageable, member.getAddress().getId(), memberIdList);
+        Page<Board> posts = boardRepository.findAllByAddressInAndMemberNotIn(pageable, nearAddressList, memberList);
         List<Board> responseList = posts.getContent();
         List<BoardResponseDto> postResponseDtoList = new ArrayList<>();
 
