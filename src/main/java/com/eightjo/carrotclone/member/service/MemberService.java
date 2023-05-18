@@ -7,15 +7,15 @@ import com.eightjo.carrotclone.global.exception.CustomException;
 import com.eightjo.carrotclone.global.jwt.JwtUtil;
 import com.eightjo.carrotclone.global.repository.RefreshTokenRepository;
 import com.eightjo.carrotclone.global.validator.TokenValidator;
-import com.eightjo.carrotclone.map.Address;
+import com.eightjo.carrotclone.map.*;
 import com.eightjo.carrotclone.map.Dto.KakaoMapRequestDto;
 import com.eightjo.carrotclone.map.Dto.MapRequestDto;
-import com.eightjo.carrotclone.map.MapRepository;
-import com.eightjo.carrotclone.map.MapService;
-import com.eightjo.carrotclone.member.dto.*;
+import com.eightjo.carrotclone.member.dto.LoginRequestDto;
+import com.eightjo.carrotclone.member.dto.LoginResponseDto;
+import com.eightjo.carrotclone.member.dto.SingupRequestDto;
+import com.eightjo.carrotclone.member.dto.TokenDto;
 import com.eightjo.carrotclone.member.entity.Member;
 import com.eightjo.carrotclone.member.repository.MemberRepository;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +36,7 @@ public class MemberService {
     private final MapService mapService;
     private final MapRepository mapRepository;
     private final TokenValidator tokenValidator;
+    private final NearAddressRepository nearAddressRepository;
     private final JwtUtil jwtUtil;
 
     //회원가입
@@ -74,6 +75,7 @@ public class MemberService {
             address = mapRepository.save(address);
             member.update(address);
             memberRepository.save(member);
+            nearAddressRepository.save(new NearAddress(address, address));
         }
         else {
             Member member = new Member(userId, password, nickname);
