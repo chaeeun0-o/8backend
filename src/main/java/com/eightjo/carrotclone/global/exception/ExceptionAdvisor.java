@@ -51,4 +51,10 @@ public class ExceptionAdvisor {
     public ResponseEntity<?> handleBindException(BindException ex) {
         return ResponseEntity.badRequest().body(new DefaultRes<>(ResponseMessage.WRONG_FORMAT));
     }
+
+
+    @ExceptionHandler(value = {NullPointerException.class})
+    public ResponseEntity<?> nullException(BindException ex) {
+        return ResponseEntity.ok(new DefaultRes<String>("데이터가 없습니다."));
+    }
 }
